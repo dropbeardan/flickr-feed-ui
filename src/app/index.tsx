@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
+import { MockingWhale } from './Components/MockingWhale';
+
 export interface HelloProps {
 	compiler: string;
 	framework: string;
@@ -15,6 +17,8 @@ export class Hello extends React.Component<HelloProps, {}> {
 				</h1>
 
 				<h1>Current Running Env Mode: {process.env.NODE_ENV}</h1>
+
+				<MockingWhale say="hello" />
 			</React.Fragment>
 		);
 	}
