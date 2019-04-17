@@ -1,0 +1,19 @@
+{
+  "name": "flickr-feed-ui",
+  "version": "1.0.0",
+  "description": "A custom Flickr UI using the public feed Flickr API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dropbeardan/flickr-feed-ui.git"
+  },
+  "author": "dropbeardan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dropbeardan/flickr-feed-ui/issues"
+  },
+  "homepage": "https://github.com/dropbeardan/flickr-feed-ui#readme"
+}
