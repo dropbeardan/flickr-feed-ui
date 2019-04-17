@@ -3,10 +3,10 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-	entry: path.join(__dirname, 'src/app/index.tsx'),
+	entry: path.join(__dirname, '../src/app/index.tsx'),
 	output: {
 		filename: 'index.bundle.js',
-		path: path.join(__dirname, 'dist')
+		path: path.join(__dirname, '../dist')
 	},
 
 	// Enable sourcemaps for debugging webpack's output.
@@ -14,7 +14,7 @@ module.exports = {
 
 	// webpack-dev-server configuration.
 	devServer: {
-		contentBase: path.join(__dirname, 'dist'),
+		contentBase: path.join(__dirname, '../dist'),
 		compress: true,
 		port: process.env.PORT || 25000
 	},
@@ -39,7 +39,7 @@ module.exports = {
 
 	plugins: [
 		new HtmlWebpackPlugin({
-			template: path.join(__dirname, 'src/public/index.html')
+			template: path.join(__dirname, '../src/public/index.html')
 		})
 	]
 };
