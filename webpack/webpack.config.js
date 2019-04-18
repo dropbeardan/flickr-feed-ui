@@ -33,7 +33,11 @@ module.exports = {
 			{ test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
 
 			// All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-			{ enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' }
+			{ enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
+
+			// Style Parsing.
+			{ test: /\.(jpg|gif|png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader' },
+			{ test: /\.css$/, use: ['style-loader', 'css-loader'] }
 		]
 	},
 
