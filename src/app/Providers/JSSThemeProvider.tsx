@@ -27,7 +27,9 @@ export const theme = {
 export class JSSThemeProvider extends React.Component {
 	render() {
 		return (
-			<ThemeProvider theme={theme}>{this.props.children as any}</ThemeProvider>
+			<ThemeProvider theme={theme}>
+				<React.Fragment>{this.props.children}</React.Fragment>
+			</ThemeProvider>
 		);
 	}
 }
