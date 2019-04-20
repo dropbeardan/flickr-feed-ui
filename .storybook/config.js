@@ -2,6 +2,8 @@ import { addDecorator, configure } from '@storybook/react';
 
 import { withThemesProvider } from 'storybook-addon-jss-theme';
 
+import 'semantic-ui-css/semantic.min.css';
+
 import { theme } from '../src/app/Providers/JSSThemeProvider';
 
 const themes = [{ name: 'JSSProviderTheme', variables: theme }];
