@@ -39,12 +39,17 @@ const palette = {
 	}
 };
 
+const spacing = {
+	unit: 8
+};
+
 export const theme = {
 	palette: {
 		...palette,
 		primary: palette.grey,
 		error: palette.red
-	}
+	},
+	spacing
 };
 
 export class JSSThemeProvider extends React.Component {
