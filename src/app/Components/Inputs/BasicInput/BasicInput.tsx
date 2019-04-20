@@ -147,7 +147,7 @@ class BasicInputComponent extends React.Component<InnerProps, InnerState> {
 		}
 
 		// ENTER
-		if (event.key === 'Enter') {
+		if (onSubmit && event.key === 'Enter') {
 			return onSubmit(this.state.value);
 		}
 	};
