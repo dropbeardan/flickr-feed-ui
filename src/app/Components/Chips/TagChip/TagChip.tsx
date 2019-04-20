@@ -53,17 +53,19 @@ class TagChipComponent extends React.Component<InnerProps, InnerState> {
 	};
 
 	render() {
-		const { classes, label } = this.props;
+		const { classes, label, onClose } = this.props;
 
 		return (
 			<Label.Group>
 				<Label as="a" size="large" onClick={this.onClickHandler}>
 					{label}
-					<Icon
-						className={classes.closeIcon}
-						name="close"
-						onClick={this.onCloseHandler}
-					/>
+					{onClose ? (
+						<Icon
+							className={classes.closeIcon}
+							name="close"
+							onClick={this.onCloseHandler}
+						/>
+					) : null}
 				</Label>
 			</Label.Group>
 		);
