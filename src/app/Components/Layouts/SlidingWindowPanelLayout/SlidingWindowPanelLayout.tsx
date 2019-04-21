@@ -111,15 +111,6 @@ class SlidingWindowPanelLayoutComponent extends React.Component<
 	InnerProps,
 	InnerState
 > {
-	getColumnFlexRatioTotal = (columnIndex: number) =>
-		this.props.windows
-			.filter(window => window.column.index === columnIndex)
-			.reduce(
-				(flexRatioTotal, nextWindow) =>
-					flexRatioTotal + nextWindow.column.flexRatio,
-				0
-			);
-
 	getLastColumnIndex = () =>
 		(this.props.windows || []).reduce(
 			(count, nextWindow) =>
@@ -133,15 +124,6 @@ class SlidingWindowPanelLayoutComponent extends React.Component<
 				nextWindow.row.index > count ? nextWindow.row.index : count,
 			0
 		);
-
-	getRowFlexRatioTotal = (rowIndex: number) =>
-		this.props.windows
-			.filter(window => window.row.index === rowIndex)
-			.reduce(
-				(flexRatioTotal, nextWindow) =>
-					flexRatioTotal + nextWindow.row.flexRatio,
-				0
-			);
 
 	render() {
 		const { classes, slideDirection, windows } = this.props;
@@ -179,10 +161,7 @@ class SlidingWindowPanelLayoutComponent extends React.Component<
 													key={`row-${columnIndex},${rowIndex}`}
 													className={classes.window}
 													style={{
-														width: targetWindow
-															? `${(100 * targetWindow.row.flexRatio) /
-																	this.getRowFlexRatioTotal(rowIndex)}%`
-															: 0,
+														flex: targetWindow.row.flexRatio,
 														opacity: targetWindow.isVisible === false ? 0 : 1
 													}}
 												>
@@ -223,10 +202,7 @@ class SlidingWindowPanelLayoutComponent extends React.Component<
 												key={`column-${columnIndex},${rowIndex}`}
 												className={classes.window}
 												style={{
-													height: targetWindow
-														? `${(100 * targetWindow.column.flexRatio) /
-																this.getColumnFlexRatioTotal(columnIndex)}%`
-														: 0,
+													flex: targetWindow.column.flexRatio,
 													opacity: targetWindow.isVisible === false ? 0 : 1
 												}}
 											>
