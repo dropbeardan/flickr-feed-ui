@@ -22,7 +22,7 @@ interface IColumn {
 	 * @example FlexRatios: [1, 1] results in Heights: [25%, 25%].
 	 * @example FlexRatios: [1, 2, 1] results in Heights: [25%, 50%, 25%].
 	 */
-	flexRatio: number;
+	flexRatio?: number;
 }
 
 interface IRow {
@@ -41,7 +41,7 @@ interface IRow {
 	 * @example FlexRatios: [1, 1] results in Widths: [25%, 25%].
 	 * @example FlexRatios: [1, 2, 1] results in Widths: [25%, 50%, 25%].
 	 */
-	flexRatio: number;
+	flexRatio?: number;
 }
 
 interface IWindow {
