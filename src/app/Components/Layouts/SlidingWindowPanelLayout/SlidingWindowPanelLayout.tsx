@@ -92,16 +92,13 @@ const styles = (theme: JSSTheme) => ({
 	column: {
 		display: 'flex',
 		flexDirection: 'column',
-		flexWrap: 'wrap',
 		height: '100%'
 	},
 	row: {
 		display: 'flex',
-		flexWrap: 'wrap',
 		width: '100%'
 	},
 	window: {
-		overflow: 'hidden',
 		transition: (props: InnerProps) =>
 			`${props.transition || props.transition === 0 ? props.transition : 250}ms`
 	}
