@@ -5,6 +5,8 @@ import 'semantic-ui-css/semantic.min.css';
 
 import { JSSThemeProvider } from './Providers';
 
+import { ImageSearchPage } from './Views';
+
 interface InnerProps {}
 
 interface InnerState {}
@@ -13,7 +15,7 @@ export class ReactApp extends React.Component<InnerProps, InnerState> {
 	render() {
 		return (
 			<JSSThemeProvider>
-				<h1>Current Running Env Mode: {process.env.NODE_ENV}</h1>
+				<ImageSearchPage />
 			</JSSThemeProvider>
 		);
 	}
