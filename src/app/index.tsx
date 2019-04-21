@@ -1,30 +1,24 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { MockingWhale } from './Components/MockingWhale';
+import 'semantic-ui-css/semantic.min.css';
 
-export interface HelloProps {
-	compiler: string;
-	framework: string;
-}
+import { JSSThemeProvider } from './Providers';
 
-export class Hello extends React.Component<HelloProps, {}> {
+import { ImageSearchPage } from './Views';
+
+interface InnerProps {}
+
+interface InnerState {}
+
+export class ReactApp extends React.Component<InnerProps, InnerState> {
 	render() {
 		return (
-			<React.Fragment>
-				<h1>
-					Hello from {this.props.compiler} and {this.props.framework}!
-				</h1>
-
-				<h1>Current Running Env Mode: {process.env.NODE_ENV}</h1>
-
-				<MockingWhale say="hello" />
-			</React.Fragment>
+			<JSSThemeProvider>
+				<ImageSearchPage />
+			</JSSThemeProvider>
 		);
 	}
 }
 
-ReactDOM.render(
-	<Hello compiler="TypeScript" framework="React" />,
-	document.getElementById('REACT_APP')
-);
+ReactDOM.render(<ReactApp />, document.getElementById('REACT_APP'));
