@@ -5,6 +5,8 @@ import * as moment from 'moment';
 
 import withStyles from 'react-jss';
 
+import { deduplicateArray } from '../Helpers';
+
 import {
 	BasicInput,
 	ImageCard,
@@ -89,7 +91,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		if (!tags.some(tag => tag === targetTag)) {
 			this.setState((state: InnerState) => ({
 				loading: true,
-				tags: [...state.tags.filter(tag => tag !== targetTag), targetTag]
+				tags: deduplicateArray([...state.tags, targetTag])
 			}));
 		}
 	};
@@ -104,17 +106,17 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		}));
 
 	onSearchHandler = (value: string) => {
-		this.setState((state: InnerState) => ({
+		const updatedTags = deduplicateArray([
+			...this.state.tags,
+			...value.split(' ')
+		]);
+
+		this.setState({
 			hasSearched: true,
 			loading: true,
 			searchValue: '',
-			tags: [
-				...state.tags,
-				...value
-					.split(' ')
-					.filter(value => value && !state.tags.some(tag => tag === value))
-			]
-		}));
+			tags: updatedTags
+		});
 	};
 
 	render() {
