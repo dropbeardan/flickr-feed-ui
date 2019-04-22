@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import axios from 'axios';
+// import axios from 'axios';
 import * as moment from 'moment';
 
 import withStyles from 'react-jss';
