@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import axios from 'axios';
 import * as moment from 'moment';
 
 import withStyles from 'react-jss';
@@ -158,7 +159,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 							children: (
 								<div className={classes.cardContainer}>
 									{tags.map(tag => (
-										<div className={classes.card}>
+										<div key={tag} className={classes.card}>
 											<ImageCard
 												date={moment('2019-04-20T21:45:48Z').format(
 													'DD-MMMM-YYYY'
