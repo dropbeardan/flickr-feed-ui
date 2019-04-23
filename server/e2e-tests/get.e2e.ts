@@ -9,8 +9,12 @@ describe('/', () => {
 
 		expect(response.status).toBe(200);
 		expect(response.data).not.toBeNull();
-		expect(typeof response.data).toBe('object');
-		expect(Array.isArray(response.data.items)).toBeTruthy();
+		expect(typeof response.data).toBe('string');
+		expect(() => JSON.parse(response.data)).not.toThrow();
+
+		const responseData = JSON.parse(response.data);
+
+		expect(Array.isArray(responseData.items)).toBeTruthy();
 	});
 });
 
@@ -26,7 +30,11 @@ describe('/:tags', () => {
 
 		expect(response.status).toBe(200);
 		expect(response.data).not.toBeNull();
-		expect(typeof response.data).toBe('object');
-		expect(Array.isArray(response.data.items)).toBeTruthy();
+		expect(typeof response.data).toBe('string');
+		expect(() => JSON.parse(response.data)).not.toThrow();
+
+		const responseData = JSON.parse(response.data);
+
+		expect(Array.isArray(responseData.items)).toBeTruthy();
 	});
 });
