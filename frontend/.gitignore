@@ -1,0 +1,8 @@
+# Package Management
+node_modules
+
+# IDE
+.vscode
+
+# Compilation Product
+dist

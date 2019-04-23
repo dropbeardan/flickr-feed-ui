@@ -1,8 +1,13 @@
 import * as React from 'react';
 
+import axios from 'axios';
 import * as moment from 'moment';
 
 import withStyles from 'react-jss';
+
+import { SERVER_URL } from '../Configs';
+
+import { deduplicateArray, isEqualArray } from '../Helpers';
 
 import {
 	BasicInput,
@@ -11,7 +16,7 @@ import {
 	TagChip
 } from '../Components';
 
-import { JSSTheme, JSSThemeContext } from '../Typings';
+import { JSSTheme, JSSThemeContext, TNode_Env } from '../Typings';
 
 interface OuterProps {}
 
@@ -19,7 +24,18 @@ interface InnerProps
 	extends OuterProps,
 		JSSThemeContext<ReturnType<typeof styles>> {}
 
+interface IFeed {
+	author: string;
+	authorURL: string;
+	date: string;
+	image: string;
+	imageURL: string;
+	tags: string[];
+	title: string;
+}
+
 interface InnerState {
+	feeds: IFeed[];
 	hasSearched: boolean;
 	loading: boolean;
 	searchValue: string;
@@ -75,6 +91,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		super(props);
 
 		this.state = {
+			feeds: [],
 			hasSearched: false,
 			loading: false,
 			searchValue: '',
@@ -82,13 +99,64 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		};
 	}
 
+	componentDidUpdate(
+		prevProps: InnerProps,
+		prevState: InnerState,
+		snapshot: any
+	) {
+		if (!isEqualArray(this.state.tags, prevState.tags)) {
+			this.updateFlickrFeedResults();
+		}
+	}
+
+	updateFlickrFeedResults = async () => {
+		const { tags } = this.state;
+
+		this.setState({
+			loading: true
+		});
+
+		try {
+			const response = await axios({
+				method: 'get',
+				baseURL:
+					SERVER_URL[(process.env.NODE_ENV as TNode_Env) || 'development'].http,
+				params: {
+					tags
+				}
+			});
+
+			const data = JSON.parse(response.data);
+			const feeds = data.items.map((feed: any) => {
+				const author = /^.*[(]"(.*)"[)]$/.exec(feed.author)[1];
+
+				return {
+					author,
+					authorURL: `https://www.flickr.com/people/${feed.author_id}`,
+					date:
+						feed.date_taken || feed.published
+							? moment(feed.date_taken || feed.published).format('DD-MMMM-YYYY')
+							: 'Date Not Specified',
+					image: feed.media.m,
+					imageURL: feed.link,
+					tags: feed.tags ? feed.tags.split(' ') : [],
+					title: feed.title.trim() || 'Untitled Feed'
+				};
+			});
+
+			this.setState({ feeds, loading: false });
+		} catch (err) {
+			this.setState({ loading: false });
+		}
+	};
+
 	onAddTagHandler = (targetTag: string) => {
 		const { tags } = this.state;
 
 		if (!tags.some(tag => tag === targetTag)) {
 			this.setState((state: InnerState) => ({
 				loading: true,
-				tags: [...state.tags.filter(tag => tag !== targetTag), targetTag]
+				tags: deduplicateArray([...state.tags, targetTag])
 			}));
 		}
 	};
@@ -103,22 +171,22 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		}));
 
 	onSearchHandler = (value: string) => {
-		this.setState((state: InnerState) => ({
+		const updatedTags = deduplicateArray([
+			...this.state.tags,
+			...value.split(' ')
+		]);
+
+		this.setState({
 			hasSearched: true,
 			loading: true,
 			searchValue: '',
-			tags: [
-				...state.tags,
-				...value
-					.split(' ')
-					.filter(value => value && !state.tags.some(tag => tag === value))
-			]
-		}));
+			tags: updatedTags
+		});
 	};
 
 	render() {
 		const { classes } = this.props;
-		const { hasSearched, loading, tags, searchValue } = this.state;
+		const { feeds, hasSearched, loading, tags, searchValue } = this.state;
 
 		return (
 			<div className={classes.layout}>
@@ -157,22 +225,24 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 							row: { index: 1, flexRatio: 0 },
 							children: (
 								<div className={classes.cardContainer}>
-									{tags.map(tag => (
-										<div className={classes.card}>
-											<ImageCard
-												date={moment('2019-04-20T21:45:48Z').format(
-													'DD-MMMM-YYYY'
-												)}
-												author="Nad"
-												authorURL="https://www.flickr.com/photos/nad/"
-												image="https://live.staticflickr.com/65535/33776493008_6d8d201e5b_m.jpg"
-												imageURL="https://www.flickr.com/photos/nad/33776493008/"
-												tags={[tag]}
-												title="Foxy"
-												onClickTag={this.onAddTagHandler}
-											/>
-										</div>
-									))}
+									{!loading &&
+										feeds.map(feed => (
+											<div
+												key={`${feed.title}-${feed.authorURL}-${feed.date}`}
+												className={classes.card}
+											>
+												<ImageCard
+													author={feed.author}
+													authorURL={feed.authorURL}
+													date={feed.date}
+													image={feed.image}
+													imageURL={feed.imageURL}
+													tags={feed.tags}
+													title={feed.title}
+													onClickTag={this.onAddTagHandler}
+												/>
+											</div>
+										))}
 								</div>
 							)
 						}
