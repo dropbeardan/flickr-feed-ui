@@ -99,6 +99,7 @@ const styles = (theme: JSSTheme) => ({
 		width: '100%'
 	},
 	window: {
+		overflow: 'hidden',
 		transition: (props: InnerProps) =>
 			`${props.transition || props.transition === 0 ? props.transition : 250}ms`
 	}

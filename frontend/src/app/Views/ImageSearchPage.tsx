@@ -9,9 +9,12 @@ import { SERVER_URL } from '../Configs';
 
 import { deduplicateArray } from '../Helpers';
 
+import { Header } from 'semantic-ui-react';
+
 import {
 	BasicInput,
 	ImageCard,
+	PlaceholderCard,
 	SlidingWindowPanelLayout,
 	TagChip
 } from '../Components';
@@ -55,7 +58,8 @@ const styles = (theme: JSSTheme) => ({
 		alignItems: 'center',
 		height: '100%',
 		width: '100%',
-		padding: 2 * theme.spacing.unit
+		padding: 2 * theme.spacing.unit,
+		transition: '250ms'
 	},
 	inputContainer: {
 		width: '40%',
@@ -81,7 +85,8 @@ const styles = (theme: JSSTheme) => ({
 		flexWrap: 'wrap',
 		height: '100%',
 		width: '100%',
-		padding: 2 * theme.spacing.unit
+		padding: 2 * theme.spacing.unit,
+		overflow: 'auto'
 	},
 	card: {
 		margin: 2 * theme.spacing.unit
@@ -209,7 +214,20 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 							column: { index: 0, flexRatio: hasSearched ? undefined : 1 },
 							row: { index: 0, flexRatio: 1 },
 							children: (
-								<div className={classes.searchContainer}>
+								<div
+									className={classes.searchContainer}
+									style={
+										hasSearched
+											? { borderBottom: `1px solid rgba(0,0,0,0.1)` }
+											: { borderBottom: `1px solid rgba(0,0,0,0)` }
+									}
+								>
+									<Header as="h1">Flickr Feed Search</Header>
+
+									<Header as="h3">
+										Search by tags using the search bar below
+									</Header>
+
 									<div className={classes.inputContainer}>
 										<BasicInput
 											loading={loading}
@@ -237,21 +255,30 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 							row: { index: 1, flexRatio: 0 },
 							children: (
 								<div className={classes.cardContainer}>
-									{!loading &&
-										feeds.map(feed => (
-											<div key={feed.imageURL} className={classes.card}>
-												<ImageCard
-													author={feed.author}
-													authorURL={feed.authorURL}
-													date={feed.date}
-													image={feed.image}
-													imageURL={feed.imageURL}
-													tags={feed.tags}
-													title={feed.title}
-													onClickTag={this.onAddTagHandler}
-												/>
-											</div>
-										))}
+									{loading
+										? new Array(20).fill('').map((value, index) => (
+												<div key={index} className={classes.card}>
+													<PlaceholderCard />
+												</div>
+										  ))
+										: null}
+
+									{!loading
+										? feeds.map(feed => (
+												<div key={feed.imageURL} className={classes.card}>
+													<ImageCard
+														author={feed.author}
+														authorURL={feed.authorURL}
+														date={feed.date}
+														image={feed.image}
+														imageURL={feed.imageURL}
+														tags={feed.tags}
+														title={feed.title}
+														onClickTag={this.onAddTagHandler}
+													/>
+												</div>
+										  ))
+										: null}
 								</div>
 							)
 						}
