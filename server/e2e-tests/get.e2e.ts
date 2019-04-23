@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 describe('/', () => {
-	it('Should pass test', async () => {
+	it('Should respond with a valid JSON string for requests with no tags.', async () => {
 		const response = await axios({
 			method: 'get',
 			url: `http://localhost:${process.env.HTTP_PORT || 8880}`
@@ -19,7 +19,7 @@ describe('/', () => {
 });
 
 describe('/:tags', () => {
-	it('Should pass test', async () => {
+	it('Should respond with a valid JSON string for requests with tags.', async () => {
 		const response = await axios({
 			method: 'get',
 			url: `http://localhost:${process.env.HTTP_PORT || 8880}`,
