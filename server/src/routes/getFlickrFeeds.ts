@@ -32,7 +32,7 @@ export const getFlickrFeeds = async (
 			baseURL: FLICKR_FEED_URL,
 			params: {
 				format: 'json',
-				tags: tags.join(',')
+				tags: (tags || []).join(',')
 			}
 		});
 
