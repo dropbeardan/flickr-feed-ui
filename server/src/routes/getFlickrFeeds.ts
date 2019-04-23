@@ -18,7 +18,13 @@ export const getFlickrFeeds = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const { tags } = req.params;
+	const { tags } = req.query;
+
+	if (tags && !Array.isArray(tags)) {
+		return res.status(400).json({
+			message: 'Bad Parameter: "tags" is not a valid string array.'
+		});
+	}
 
 	try {
 		const response = await axios({
@@ -26,7 +32,7 @@ export const getFlickrFeeds = async (
 			baseURL: FLICKR_FEED_URL,
 			params: {
 				format: 'json',
-				tags
+				tags: tags.join(',')
 			}
 		});
 
