@@ -31,11 +31,15 @@ interface InnerProps
 interface InnerState {}
 
 const styles = (theme: JSSTheme) => ({
+	card: {
+		height: '450px'
+	},
 	imageContainer: {
 		position: 'relative',
 		display: 'flex',
 		height: '100%',
 		width: '100%',
+		background: 'black',
 		'&:hover $imageOverlay': {
 			background: 'rgba(0,0,0,0.5)',
 			'& > *': {
@@ -46,10 +50,7 @@ const styles = (theme: JSSTheme) => ({
 	image: {
 		display: 'flex !important',
 		width: '100%',
-		'& > img': {
-			objectFit: 'cover',
-			width: '100%'
-		}
+		objectFit: 'contain'
 	},
 	imageOverlay: {
 		position: 'absolute',
@@ -69,11 +70,13 @@ const styles = (theme: JSSTheme) => ({
 	description: {
 		padding: `${0.5 * theme.spacing.unit}px ${2 * theme.spacing.unit}px`
 	},
+	extra: {
+		overflow: 'auto',
+		height: '80px'
+	},
 	tagContainer: {
 		display: 'flex',
 		flexWrap: 'wrap',
-		height: '80px',
-		overflow: 'auto',
 		'& > *': {
 			margin: 0.5 * theme.spacing.unit
 		}
@@ -102,7 +105,7 @@ class ImageCardComponent extends React.Component<InnerProps, InnerState> {
 		} = this.props;
 
 		return (
-			<Card>
+			<Card className={classes.card}>
 				<a className={classes.imageContainer} href={imageURL} target="_blank">
 					<Image className={classes.image} src={image} />
 					<div className={classes.imageOverlay}>
@@ -122,7 +125,7 @@ class ImageCardComponent extends React.Component<InnerProps, InnerState> {
 				<Card.Description>
 					<div className={classes.description}>{date}</div>
 				</Card.Description>
-				<Card.Content extra>
+				<Card.Content className={classes.extra} extra>
 					<div className={classes.tagContainer}>
 						{tags.map((tag, index) => (
 							<TagChip
