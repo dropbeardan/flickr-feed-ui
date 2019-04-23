@@ -133,6 +133,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 			const data = JSON.parse(response.data);
 			const feeds = data.items.map((feed: any) => {
 				const author = /^.*[(]"(.*)"[)]$/.exec(feed.author)[1];
+				const title = feed.title.trim() || 'Untitled Feed';
 
 				return {
 					author,
@@ -144,7 +145,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 					image: feed.media.m,
 					imageURL: feed.link,
 					tags: feed.tags ? feed.tags.split(' ') : [],
-					title: feed.title.trim() || 'Untitled Feed'
+					title: title.length < 100 ? title : `${title.substr(0, 100)}...`
 				};
 			});
 
