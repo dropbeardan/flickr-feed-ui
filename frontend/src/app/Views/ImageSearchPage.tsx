@@ -11,6 +11,8 @@ import { deduplicateArray } from '../Helpers';
 
 import { Header } from 'semantic-ui-react';
 
+const BackgroundImage = require('../../public/assets/background.jpg');
+
 import {
 	BasicInput,
 	ImageCard,
@@ -48,8 +50,18 @@ interface InnerState {
 
 const styles = (theme: JSSTheme) => ({
 	layout: {
+		position: 'relative',
 		height: '100vh',
 		width: '100vw'
+	},
+	background: {
+		position: 'absolute',
+		zIndex: '-1',
+		backgroundImage: `url(${BackgroundImage})`,
+		height: '100%',
+		width: '100%',
+		opacity: '1',
+		transition: '250ms'
 	},
 	searchContainer: {
 		display: 'flex',
@@ -207,6 +219,11 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 
 		return (
 			<div className={classes.layout}>
+				<div
+					className={classes.background}
+					style={hasSearched ? { opacity: 0.25 } : {}}
+				/>
+
 				<SlidingWindowPanelLayout
 					slideDirection="column"
 					windows={[

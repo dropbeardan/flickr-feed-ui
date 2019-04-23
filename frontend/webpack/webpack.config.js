@@ -36,8 +36,17 @@ module.exports = {
 			{ enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
 
 			// Style Parsing.
-			{ test: /\.(jpg|gif|png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader' },
-			{ test: /\.css$/, use: ['style-loader', 'css-loader'] }
+			{ test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader' },
+			{ test: /\.css$/, use: ['style-loader', 'css-loader'] },
+
+			// Image Parsing.
+			{
+				test: /\.(gif|jpe?g|png)$/,
+				loader: 'file-loader',
+				options: {
+					name: 'images/[hash]-[name].[ext]'
+				}
+			}
 		]
 	},
 
