@@ -1,4 +1,4 @@
-import { deduplicateArray } from './Arrays';
+import { deduplicateArray } from '../Arrays';
 
 describe('deduplicateArray', () => {
 	const runTest = (testCases: { input: any[]; output: any[] }[]) =>
