@@ -77,6 +77,7 @@ const styles = (theme: JSSTheme) => ({
 	tagContainer: {
 		display: 'flex',
 		flexWrap: 'wrap',
+		overflowX: 'hidden',
 		'& > *': {
 			margin: 0.5 * theme.spacing.unit
 		}
