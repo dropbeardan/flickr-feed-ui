@@ -2,7 +2,7 @@ version: 2.1
 
 jobs:
   test_client:
-    working_directory: ~/app-name
+    working_directory: ~/app
     docker:
       - image: circleci/node:11
     steps:
@@ -10,18 +10,44 @@ jobs:
 
       - restore_cache:
           keys:
-            - test_client-node-modules-{{ checksum "yarn.lock" }}
-      - run: yarn install
+            - test_client-node-modules-{{ checksum "frontend/yarn.lock" }}
+      - run: yarn --cwd frontend install
 
       - save_cache:
-          key: test_client-node-modules-{{ checksum "yarn.lock" }}
+          key: test_client-node-modules-{{ checksum "frontend/yarn.lock" }}
           paths:
             - node_modules
 
-      - run: yarn test
+      - run: yarn --cwd frontend test
+
+  test_server:
+    working_directory: ~/app
+    docker:
+      - image: circleci/node:11
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - test_server-node-modules-{{ checksum "server/yarn.lock" }}
+      - run: yarn --cwd server install
+
+      - save_cache:
+          key: test_server-node-modules-{{ checksum "server/yarn.lock" }}
+          paths:
+            - node_modules
+
+      - run: yarn --cwd server build
+
+      - run:
+          command: yarn --cwd server start
+          background: true
+
+      - run: yarn --cwd server test
 
 workflows:
   version: 2
   build_test_deploy:
     jobs:
       - test_client
+      - test_server

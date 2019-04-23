@@ -4,7 +4,7 @@
 	"description": "A custom Flickr UI using the public feed Flickr API with proxy server",
 	"main": "index.js",
 	"scripts": {
-		"test": "yarn --cwd frontend test"
+		"test": "yarn --cwd frontend test && yarn --cwd server test"
 	},
 	"repository": {
 		"type": "git",

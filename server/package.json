@@ -8,6 +8,7 @@
 		"preview": "yarn build && cross-env HTTP_PORT=8880 HTTPs_PORT=8881 node dist/index.js",
 		"e2e-test": "cross-env HTTP_PORT=8880 HTTPs_PORT=8881 jest --config jest/e2e.config.js",
 		"unit-test": "cross-env HTTP_PORT=8880 HTTPs_PORT=8881 jest --config jest/unit.config.js",
+		"start": "cross-env HTTP_PORT=8880 HTTPs_PORT=8881 node dist/index.js",
 		"test": "yarn e2e-test && yarn unit-test"
 	},
 	"author": "dropbeardan",
