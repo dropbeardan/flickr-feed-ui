@@ -7,7 +7,7 @@ import withStyles from 'react-jss';
 
 import { SERVER_URL } from '../Configs';
 
-import { deduplicateArray, isEqualArray } from '../Helpers';
+import { deduplicateArray } from '../Helpers';
 
 import {
 	BasicInput,
@@ -172,7 +172,8 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 	onRemoveTagHandler = (targetTag: string) => () =>
 		this.setState((state: InnerState) => ({
 			loading: true,
-			tags: state.tags.filter(tag => tag !== targetTag)
+			tags: state.tags.filter(tag => tag !== targetTag),
+			updateFeeds: true
 		}));
 
 	onSearchHandler = (value: string) => {
