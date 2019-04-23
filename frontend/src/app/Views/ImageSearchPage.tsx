@@ -59,7 +59,8 @@ const styles = (theme: JSSTheme) => ({
 	},
 	inputContainer: {
 		width: '40%',
-		minWidth: '200px'
+		minWidth: '350px',
+		maxWidth: '100%'
 	},
 	tagContainer: {
 		display: 'flex',
