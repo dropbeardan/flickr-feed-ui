@@ -40,6 +40,7 @@ interface InnerState {
 	loading: boolean;
 	searchValue: string;
 	tags: string[];
+	updateFeeds: boolean;
 }
 
 const styles = (theme: JSSTheme) => ({
@@ -95,7 +96,8 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 			hasSearched: false,
 			loading: false,
 			searchValue: '',
-			tags: []
+			tags: [],
+			updateFeeds: false
 		};
 	}
 
@@ -104,7 +106,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		prevState: InnerState,
 		snapshot: any
 	) {
-		if (!isEqualArray(this.state.tags, prevState.tags)) {
+		if (this.state.updateFeeds) {
 			this.updateFlickrFeedResults();
 		}
 	}
@@ -113,7 +115,8 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		const { tags } = this.state;
 
 		this.setState({
-			loading: true
+			loading: true,
+			updateFeeds: false
 		});
 
 		try {
@@ -156,7 +159,8 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		if (!tags.some(tag => tag === targetTag)) {
 			this.setState((state: InnerState) => ({
 				loading: true,
-				tags: deduplicateArray([...state.tags, targetTag])
+				tags: deduplicateArray([...state.tags, targetTag]),
+				updateFeeds: true
 			}));
 		}
 	};
@@ -171,6 +175,10 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		}));
 
 	onSearchHandler = (value: string) => {
+		if (!value) {
+			return this.setState({ updateFeeds: true });
+		}
+
 		const updatedTags = deduplicateArray([
 			...this.state.tags,
 			...value.split(' ')
@@ -180,7 +188,8 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 			hasSearched: true,
 			loading: true,
 			searchValue: '',
-			tags: updatedTags
+			tags: updatedTags,
+			updateFeeds: true
 		});
 	};
 
