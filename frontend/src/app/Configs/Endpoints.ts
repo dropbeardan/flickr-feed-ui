@@ -1,10 +1,17 @@
-export const SERVER_URL = {
+interface ISERVER_URL {
+	[K: string]: {
+		http: string;
+		https: string;
+	};
+}
+
+export const SERVER_URL: ISERVER_URL = {
 	development: {
-		http: process.env.HTTP_PORT || 8880,
-		https: process.env.HTTP_PORT || 8881
+		http: `http://localhost:${process.env.HTTP_PORT || 8880}`,
+		https: `http://localhost:${process.env.HTTPS_PORT || 8881}`
 	},
 	production: {
-		http: process.env.HTTP_PORT || 8880,
-		https: process.env.HTTP_PORT || 8881
+		http: `http://localhost:${process.env.HTTP_PORT || 8880}`,
+		https: `http://localhost:${process.env.HTTPS_PORT || 8881}`
 	}
 };
