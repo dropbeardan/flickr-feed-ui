@@ -7,11 +7,16 @@ import withStyles from 'react-jss';
 
 import { SERVER_URL } from '../Configs';
 
-import { deduplicateArray, isEqualArray } from '../Helpers';
+import { deduplicateArray } from '../Helpers';
+
+import { Header } from 'semantic-ui-react';
+
+const BackgroundImage = require('../../public/assets/background.jpg');
 
 import {
 	BasicInput,
 	ImageCard,
+	PlaceholderCard,
 	SlidingWindowPanelLayout,
 	TagChip
 } from '../Components';
@@ -40,12 +45,23 @@ interface InnerState {
 	loading: boolean;
 	searchValue: string;
 	tags: string[];
+	updateFeeds: boolean;
 }
 
 const styles = (theme: JSSTheme) => ({
 	layout: {
+		position: 'relative',
 		height: '100vh',
 		width: '100vw'
+	},
+	background: {
+		position: 'absolute',
+		zIndex: '-1',
+		backgroundImage: `url(${BackgroundImage})`,
+		height: '100%',
+		width: '100%',
+		opacity: '1',
+		transition: '250ms'
 	},
 	searchContainer: {
 		display: 'flex',
@@ -54,11 +70,13 @@ const styles = (theme: JSSTheme) => ({
 		alignItems: 'center',
 		height: '100%',
 		width: '100%',
-		padding: 2 * theme.spacing.unit
+		padding: 2 * theme.spacing.unit,
+		transition: '250ms'
 	},
 	inputContainer: {
 		width: '40%',
-		minWidth: '200px'
+		minWidth: '350px',
+		maxWidth: '100%'
 	},
 	tagContainer: {
 		display: 'flex',
@@ -79,7 +97,8 @@ const styles = (theme: JSSTheme) => ({
 		flexWrap: 'wrap',
 		height: '100%',
 		width: '100%',
-		padding: 2 * theme.spacing.unit
+		padding: 2 * theme.spacing.unit,
+		overflow: 'auto'
 	},
 	card: {
 		margin: 2 * theme.spacing.unit
@@ -95,7 +114,8 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 			hasSearched: false,
 			loading: false,
 			searchValue: '',
-			tags: []
+			tags: [],
+			updateFeeds: false
 		};
 	}
 
@@ -104,7 +124,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		prevState: InnerState,
 		snapshot: any
 	) {
-		if (!isEqualArray(this.state.tags, prevState.tags)) {
+		if (this.state.updateFeeds) {
 			this.updateFlickrFeedResults();
 		}
 	}
@@ -113,7 +133,8 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		const { tags } = this.state;
 
 		this.setState({
-			loading: true
+			loading: true,
+			updateFeeds: false
 		});
 
 		try {
@@ -129,6 +150,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 			const data = JSON.parse(response.data);
 			const feeds = data.items.map((feed: any) => {
 				const author = /^.*[(]"(.*)"[)]$/.exec(feed.author)[1];
+				const title = feed.title.trim() || 'Untitled Feed';
 
 				return {
 					author,
@@ -140,7 +162,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 					image: feed.media.m,
 					imageURL: feed.link,
 					tags: feed.tags ? feed.tags.split(' ') : [],
-					title: feed.title.trim() || 'Untitled Feed'
+					title: title.length < 100 ? title : `${title.substr(0, 100)}...`
 				};
 			});
 
@@ -156,7 +178,8 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 		if (!tags.some(tag => tag === targetTag)) {
 			this.setState((state: InnerState) => ({
 				loading: true,
-				tags: deduplicateArray([...state.tags, targetTag])
+				tags: deduplicateArray([...state.tags, targetTag]),
+				updateFeeds: true
 			}));
 		}
 	};
@@ -167,10 +190,15 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 	onRemoveTagHandler = (targetTag: string) => () =>
 		this.setState((state: InnerState) => ({
 			loading: true,
-			tags: state.tags.filter(tag => tag !== targetTag)
+			tags: state.tags.filter(tag => tag !== targetTag),
+			updateFeeds: true
 		}));
 
 	onSearchHandler = (value: string) => {
+		if (!value) {
+			return this.setState({ updateFeeds: true });
+		}
+
 		const updatedTags = deduplicateArray([
 			...this.state.tags,
 			...value.split(' ')
@@ -180,7 +208,8 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 			hasSearched: true,
 			loading: true,
 			searchValue: '',
-			tags: updatedTags
+			tags: updatedTags,
+			updateFeeds: true
 		});
 	};
 
@@ -190,6 +219,11 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 
 		return (
 			<div className={classes.layout}>
+				<div
+					className={classes.background}
+					style={hasSearched ? { opacity: 0.25 } : {}}
+				/>
+
 				<SlidingWindowPanelLayout
 					slideDirection="column"
 					windows={[
@@ -197,7 +231,20 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 							column: { index: 0, flexRatio: hasSearched ? undefined : 1 },
 							row: { index: 0, flexRatio: 1 },
 							children: (
-								<div className={classes.searchContainer}>
+								<div
+									className={classes.searchContainer}
+									style={
+										hasSearched
+											? { borderBottom: `1px solid rgba(0,0,0,0.1)` }
+											: { borderBottom: `1px solid rgba(0,0,0,0)` }
+									}
+								>
+									<Header as="h1">Flickr Feed Search</Header>
+
+									<Header as="h3">
+										Search by tags using the search bar below
+									</Header>
+
 									<div className={classes.inputContainer}>
 										<BasicInput
 											loading={loading}
@@ -225,24 +272,30 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 							row: { index: 1, flexRatio: 0 },
 							children: (
 								<div className={classes.cardContainer}>
-									{!loading &&
-										feeds.map(feed => (
-											<div
-												key={`${feed.title}-${feed.authorURL}-${feed.date}`}
-												className={classes.card}
-											>
-												<ImageCard
-													author={feed.author}
-													authorURL={feed.authorURL}
-													date={feed.date}
-													image={feed.image}
-													imageURL={feed.imageURL}
-													tags={feed.tags}
-													title={feed.title}
-													onClickTag={this.onAddTagHandler}
-												/>
-											</div>
-										))}
+									{loading
+										? new Array(20).fill('').map((value, index) => (
+												<div key={index} className={classes.card}>
+													<PlaceholderCard />
+												</div>
+										  ))
+										: null}
+
+									{!loading
+										? feeds.map(feed => (
+												<div key={feed.imageURL} className={classes.card}>
+													<ImageCard
+														author={feed.author}
+														authorURL={feed.authorURL}
+														date={feed.date}
+														image={feed.image}
+														imageURL={feed.imageURL}
+														tags={feed.tags}
+														title={feed.title}
+														onClickTag={this.onAddTagHandler}
+													/>
+												</div>
+										  ))
+										: null}
 								</div>
 							)
 						}
