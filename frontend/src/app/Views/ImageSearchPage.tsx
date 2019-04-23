@@ -238,10 +238,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 								<div className={classes.cardContainer}>
 									{!loading &&
 										feeds.map(feed => (
-											<div
-												key={`${feed.title}-${feed.authorURL}-${feed.date}`}
-												className={classes.card}
-											>
+											<div key={feed.imageURL} className={classes.card}>
 												<ImageCard
 													author={feed.author}
 													authorURL={feed.authorURL}
