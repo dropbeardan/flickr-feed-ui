@@ -4,7 +4,7 @@
 	"description": "A custom Flickr UI using the public feed Flickr API",
 	"main": "dist/index.html",
 	"scripts": {
-		"build": "webpack --config webpack/webpack.config.js",
+		"build": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.js",
 		"preview": "cross-env NODE_ENV=development PORT=8000 webpack-dev-server --config webpack/webpack.config.js",
 		"storybook": "start-storybook -p 8800",
 		"test": "npm run unit-test",
