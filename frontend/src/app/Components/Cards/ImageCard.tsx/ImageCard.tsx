@@ -68,14 +68,14 @@ const styles = (theme: JSSTheme) => ({
 		}
 	},
 	title: {
-		wordWrap: 'break-all'
+		wordBreak: 'break-all'
 	},
 	author: {
-		wordWrap: 'break-all'
+		wordBreak: 'break-all'
 	},
 	description: {
 		padding: `${0.5 * theme.spacing.unit}px ${2 * theme.spacing.unit}px`,
-		wordWrap: 'break-all'
+		wordBreak: 'break-all'
 	},
 	extra: {
 		overflow: 'auto',
@@ -121,13 +121,8 @@ class ImageCardComponent extends React.Component<InnerProps, InnerState> {
 					</div>
 				</a>
 				<Card.Content>
-					<Card.Header
-						className={classes.title}
-						as="a"
-						href={imageURL}
-						target="_blank"
-					>
-						{title}
+					<Card.Header as="a" href={imageURL} target="_blank">
+						<span className={classes.title}>{title}</span>
 					</Card.Header>
 					<Card.Meta>
 						<a className={classes.author} href={authorURL} target="_blank">
