@@ -8,7 +8,7 @@ import { JSONBodySyntaxErrorHandler } from './middlewares';
 
 import { routes } from './routes';
 
-const app = express();
+export const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -17,16 +17,18 @@ app.use(JSONBodySyntaxErrorHandler);
 
 app.all('*', routes);
 
-const httpPort = process.env.HTTP_PORT || 8880;
-const httpsPort = process.env.HTTPS_PORT || 8881;
+if (process.env.MODE !== 'AWS_LAMBDA') {
+	const httpPort = process.env.HTTP_PORT || 8880;
+	const httpsPort = process.env.HTTPS_PORT || 8881;
 
-http
-	.createServer(app)
-	.listen(httpPort, () =>
-		console.log(`Listening to HTTP requests on port ${httpPort}.`)
-	);
-https
-	.createServer(app)
-	.listen(httpsPort, () =>
-		console.log(`Listening to HTTP requests on port ${httpsPort}.`)
-	);
+	http
+		.createServer(app)
+		.listen(httpPort, () =>
+			console.log(`Listening to HTTP requests on port ${httpPort}.`)
+		);
+	https
+		.createServer(app)
+		.listen(httpsPort, () =>
+			console.log(`Listening to HTTP requests on port ${httpsPort}.`)
+		);
+}
