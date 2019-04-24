@@ -196,7 +196,7 @@ class ImageSearchPageComponent extends React.Component<InnerProps, InnerState> {
 
 	onSearchHandler = (value: string) => {
 		if (!value) {
-			return this.setState({ updateFeeds: true });
+			return this.setState({ hasSearched: true, updateFeeds: true });
 		}
 
 		const updatedTags = deduplicateArray([
